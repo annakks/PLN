@@ -20,7 +20,8 @@ text_corpus = "Os melhores produtos " \
 "suas expectativas. Pessoas gostam de produtos "\
 "vendidos com tamanhos corretos, adequados "\
 "ou que chegam no prazo. Pessoas adoram mercadorias "\
-"que atendem as suas expectativas. "
+"que atendem as suas expectativas." \
+    "As pessoas reclamam de produtos quebrados e danificados"\
 
 stop_words = ['a', 'as', 'e', 'o', 'os', 'da', 'de', 'do', 'um', 'uma']
 
