@@ -45,48 +45,43 @@ print("\n\n")
 
 # Função para substituir palavras por sinônimos com base na similaridade
 def substituir_por_sinonimos(frase, modelo, threshold=0.5):
-    print("\n\n")
+    print("\n\nFrase original:")
     print(frase)
-    print("\n\n")
-    print(modelo)
-    print("\n\n")
+    
     tokens = [re.sub(r'[^A-Za-zÀ-Ýà-ý]','', word).lower() for word in word_tokenize(frase)]
     
+    print("\nTokens:")
     print(tokens)
-    print("\n\n")
+    
     novos_tokens = []
 
     for token in tokens:
         if token in modelo.wv:
-            # Encontrar os sinônimos mais similares usando a função most_similar
-            sinonimos = modelo.wv.most_similar(token)
-            melhor_sinonimo = sinonimos[0]
+            similaridade_max = threshold
+            sinonimo = token
             
-            if melhor_sinonimo[1] >= threshold:
-                novos_tokens.append(melhor_sinonimo[0])
+            for palavra in modelo.wv.index_to_key:
+                if palavra != token:
+                    v1 = modelo.wv[token]
+                    v2 = modelo.wv[palavra]
+                    similaridade = dot(v1, v2) / (norm(v1) * norm(v2))
+                    
+                    if similaridade > similaridade_max:
+                        similaridade_max = similaridade
+                        sinonimo = palavra
+            
+            if similaridade_max >= threshold:
+                novos_tokens.append(sinonimo)
+                print(f"Substituindo '{token}' por '{sinonimo}'")
             else:
                 novos_tokens.append(token)
-        else:
-            novos_tokens.append(token)
 
     nova_frase = ' '.join(novos_tokens)
-    if nova_frase == frase:
-        # Se a frase não foi alterada, tente substituir cada palavra por um sinônimo diferente
-        for i in range(len(novos_tokens)):
-            sinonimos = modelo.wv.most_similar(novos_tokens[i])
-            melhor_sinonimo = sinonimos[0]
-            if melhor_sinonimo[1] >= threshold:
-                novos_tokens[i] = melhor_sinonimo[0]
-
-        nova_frase = ' '.join(novos_tokens)
-
-    return nova_frase
+    
+    print("\nFrase com substituição de sinônimos:")
+    print(nova_frase)
+    print("\n\n")
 
 # Exemplo de uso
 frase_usuario = input("Digite uma frase: ")
-print("\n\n")
-frase_substituida = substituir_por_sinonimos(frase_usuario, w2vec_model)
-print("Frase original:", frase_usuario)
-print("\n\n")
-print("Frase com substituição de sinônimos:", frase_substituida)
-print("\n\n")
+substituir_por_sinonimos(frase_usuario, w2vec_model)
