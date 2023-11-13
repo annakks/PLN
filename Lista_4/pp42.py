@@ -43,8 +43,8 @@ w2vec_model = word2vec.Word2Vec(normalized_sentences, vector_size=feature_size,
 print(normalized_sentences)
 print("\n\n")
 
-# Função para substituir palavras por sinônimos com base na similaridade
-def substituir_por_sinonimos(frase, modelo, threshold=0.5):
+# Função para substituir palavras por sinônimos com base no cosseno
+def substituir_por_sinonimos(frase, modelo, threshold=0.6):
     print("\n\nFrase original:")
     print(frase)
     
@@ -64,7 +64,7 @@ def substituir_por_sinonimos(frase, modelo, threshold=0.5):
                 if palavra != token:
                     v1 = modelo.wv[token]
                     v2 = modelo.wv[palavra]
-                    similaridade = dot(v1, v2) / (norm(v1) * norm(v2))
+                    similaridade = dot(v1, v2) / (norm(v1) * norm(v2)) # calculando o cosseno 
                     
                     if similaridade > similaridade_max:
                         similaridade_max = similaridade
